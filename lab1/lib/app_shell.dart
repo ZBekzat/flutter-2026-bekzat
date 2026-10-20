@@ -6,6 +6,7 @@ import 'models/profile.dart';
 import 'screens/favourites_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/runs_screen.dart';
+import 'routes.dart';
 import 'theme_mode_scope.dart';
 
 class AppShell extends StatefulWidget {
@@ -31,6 +32,48 @@ class _AppShellState extends State<AppShell> {
                 : item,
           )
           .toList();
+    });
+  }
+
+  Item _updateRun(Item updatedItem) {
+    if (!mounted) {
+      return updatedItem;
+    }
+    setState(() {
+      _items = _items
+          .map((item) => item.title == updatedItem.title ? updatedItem : item)
+          .toList();
+    });
+    return updatedItem;
+  }
+
+  void _openRunDetails(Item item) {
+    if (!mounted) {
+      return;
+    }
+    Navigator.pushNamed<void>(
+      context,
+      Routes.runDetails,
+      arguments: RunDetailsArguments(
+        item: item,
+        profile: _profile,
+        onParticipantsChanged: _updateRun,
+        onOpenProfile: _openProfile,
+      ),
+    );
+  }
+
+  void _openProfile() {
+    if (!mounted) {
+      return;
+    }
+    Navigator.of(context)
+        .popUntil((route) => route.settings.name == Routes.home);
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _selectedIndex = 2;
     });
   }
 
@@ -82,13 +125,18 @@ class _AppShellState extends State<AppShell> {
       ),
     );
 
-    if (shouldReset ?? false) {
-      _resetData();
+    if (!mounted || shouldReset != true) {
+      return;
     }
+    _resetData();
   }
 
   Widget _selectedScreen(ThemeMode themeMode) => switch (_selectedIndex) {
-    0 => RunsScreen(items: _items, onFavouriteChanged: _toggleFavourite),
+    0 => RunsScreen(
+      items: _items,
+      onFavouriteChanged: _toggleFavourite,
+      onRunSelected: _openRunDetails,
+    ),
     1 => FavouritesScreen(items: _items, onFavouriteChanged: _toggleFavourite),
     2 => ProfileScreen(
       profile: _profile,

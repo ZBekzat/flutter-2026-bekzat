@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'app_shell.dart';
 import 'routes.dart';
+import 'screens/not_found_screen.dart';
+import 'screens/run_details_screen.dart';
 import 'theme_mode_scope.dart';
 
 class MyApp extends StatefulWidget {
@@ -41,10 +43,30 @@ class _MyAppState extends State<MyApp> {
         child: child ?? const SizedBox.shrink(),
       ),
       routes: {
-        AppRoutes.home: (context) =>
+        Routes.home: (context) =>
             AppShell(onThemeModeChanged: _changeThemeMode),
       },
-      initialRoute: AppRoutes.home,
+      onGenerateRoute: (settings) {
+        if (settings.name == Routes.runDetails) {
+          final arguments = settings.arguments;
+          if (arguments is RunDetailsArguments) {
+            return MaterialPageRoute<void>(
+              settings: settings,
+              builder: (context) => RunDetailsScreen(arguments: arguments),
+            );
+          }
+          return MaterialPageRoute<void>(
+            settings: settings,
+            builder: (context) => const NotFoundScreen(),
+          );
+        }
+        return null;
+      },
+      onUnknownRoute: (settings) => MaterialPageRoute<void>(
+        settings: settings,
+        builder: (context) => const NotFoundScreen(),
+      ),
+      initialRoute: Routes.home,
     );
   }
 }

@@ -10,10 +10,12 @@ class RunsScreen extends StatefulWidget {
     super.key,
     required this.items,
     required this.onFavouriteChanged,
+    required this.onRunSelected,
   });
 
   final List<Item> items;
   final ValueChanged<Item> onFavouriteChanged;
+  final ValueChanged<Item> onRunSelected;
 
   @override
   State<RunsScreen> createState() => _RunsScreenState();
@@ -178,6 +180,7 @@ class _RunsScreenState extends State<RunsScreen> {
                     itemBuilder: (context, index) => RunCard(
                       item: visibleItems[index],
                       onFavouriteChanged: widget.onFavouriteChanged,
+                      onTap: () => widget.onRunSelected(visibleItems[index]),
                     ),
                   );
                 }
@@ -190,6 +193,7 @@ class _RunsScreenState extends State<RunsScreen> {
                   itemBuilder: (context, index) => RunCard(
                     item: visibleItems[index],
                     onFavouriteChanged: widget.onFavouriteChanged,
+                    onTap: () => widget.onRunSelected(visibleItems[index]),
                   ),
                 );
               },
