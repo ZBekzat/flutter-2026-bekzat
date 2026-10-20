@@ -24,27 +24,43 @@ class _AppShellState extends State<AppShell> {
   int _selectedIndex = 0;
 
   void _toggleFavourite(Item changedItem) {
+    final index = _items.indexWhere((item) => identical(item, changedItem));
+    if (index < 0) {
+      return;
+    }
     setState(() {
-      _items = _items
-          .map(
-            (item) => item.title == changedItem.title
-                ? item.copyWith(isFavourite: !item.isFavourite)
-                : item,
-          )
-          .toList();
+      final updatedItems = List<Item>.of(_items);
+      updatedItems[index] = changedItem.copyWith(
+        isFavourite: !changedItem.isFavourite,
+      );
+      _items = updatedItems;
     });
   }
 
-  Item _updateRun(Item updatedItem) {
+  Item _updateRun(Item currentItem, Item updatedItem) {
     if (!mounted) {
       return updatedItem;
     }
+    final index = _items.indexWhere((item) => identical(item, currentItem));
+    if (index < 0) {
+      return updatedItem;
+    }
     setState(() {
-      _items = _items
-          .map((item) => item.title == updatedItem.title ? updatedItem : item)
-          .toList();
+      final updatedItems = List<Item>.of(_items);
+      updatedItems[index] = updatedItem;
+      _items = updatedItems;
     });
     return updatedItem;
+  }
+
+  void _deleteRun(Item item) {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _items = _items.where((run) => !identical(run, item)).toList();
+      _selectedIndex = 0;
+    });
   }
 
   void _openRunDetails(Item item) {
@@ -58,6 +74,7 @@ class _AppShellState extends State<AppShell> {
         item: item,
         profile: _profile,
         onParticipantsChanged: _updateRun,
+        onDeleteRun: _deleteRun,
         onOpenProfile: _openProfile,
         onEditRun: _editRun,
       ),
@@ -88,10 +105,14 @@ class _AppShellState extends State<AppShell> {
     if (!mounted || result == null) {
       return null;
     }
+    final index = _items.indexWhere((run) => identical(run, item));
+    if (index < 0) {
+      return null;
+    }
     setState(() {
-      _items = _items
-          .map((run) => run.title == item.title ? result : run)
-          .toList();
+      final updatedItems = List<Item>.of(_items);
+      updatedItems[index] = result;
+      _items = updatedItems;
     });
     return result;
   }
@@ -173,11 +194,28 @@ class _AppShellState extends State<AppShell> {
     1 => FavouritesScreen(items: _items, onFavouriteChanged: _toggleFavourite),
     2 => ProfileScreen(
       profile: _profile,
+      listsCount: _listsCount,
+      onProfileChanged: _updateProfile,
       themeMode: themeMode,
       onThemeModeChanged: widget.onThemeModeChanged,
     ),
     _ => const SizedBox.shrink(),
   };
+
+  int get _listsCount {
+    final name = _profile.name.trim();
+    if (name.isEmpty) {
+      return 0;
+    }
+    final firstName = name.split(RegExp(r'\s+')).first;
+    return _items.where((item) => item.contains(firstName)).length;
+  }
+
+  void _updateProfile(Profile profile) {
+    setState(() {
+      _profile = profile;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

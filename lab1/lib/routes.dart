@@ -12,13 +12,15 @@ class RunDetailsArguments {
     required this.item,
     required this.profile,
     required this.onParticipantsChanged,
+    required this.onDeleteRun,
     required this.onOpenProfile,
     required this.onEditRun,
   });
 
   final Item item;
   final Profile profile;
-  final Item Function(Item updatedItem) onParticipantsChanged;
+  final Item Function(Item currentItem, Item updatedItem) onParticipantsChanged;
+  final void Function(Item item) onDeleteRun;
   final void Function() onOpenProfile;
   final Future<Item?> Function(Item item) onEditRun;
 }

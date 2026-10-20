@@ -145,7 +145,9 @@ class _RunDetailsScreenState extends State<RunDetailsScreen> {
       participants.add(_profileName);
     }
 
+    final currentItem = _item;
     final updatedItem = widget.arguments.onParticipantsChanged(
+      currentItem,
       _item.copyWith(participants: participants),
     );
     if (!mounted) {
@@ -154,6 +156,34 @@ class _RunDetailsScreenState extends State<RunDetailsScreen> {
     setState(() {
       _item = updatedItem;
     });
+  }
+
+  Future<void> _deleteRun() async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete run?'),
+        content: Text('“${_item.title}” will be removed from PaceMate.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || shouldDelete != true) {
+      return;
+    }
+    widget.arguments.onDeleteRun(_item);
+    if (!mounted) {
+      return;
+    }
+    Navigator.pop(context);
   }
 
   Widget _buildHeader(BuildContext context) {
@@ -320,10 +350,30 @@ class _RunDetailsScreenState extends State<RunDetailsScreen> {
         appBar: AppBar(
           title: const Text('Run details'),
           actions: [
-            IconButton(
-              tooltip: 'Edit run',
-              onPressed: _editRun,
-              icon: const Icon(Icons.edit_outlined),
+            PopupMenuButton<String>(
+              onSelected: (action) {
+                if (action == 'edit') {
+                  _editRun();
+                } else if (action == 'delete') {
+                  _deleteRun();
+                }
+              },
+              itemBuilder: (context) => const [
+                PopupMenuItem(
+                  value: 'edit',
+                  child: ListTile(
+                    leading: Icon(Icons.edit_outlined),
+                    title: Text('Edit'),
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: ListTile(
+                    leading: Icon(Icons.delete_outline),
+                    title: Text('Delete'),
+                  ),
+                ),
+              ],
             ),
           ],
           bottom: TabBar(
