@@ -59,9 +59,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  String? _validateName(String? value) =>
-      (value?.trim().isNotEmpty ?? false) ? null : 'Enter your name.';
-
   String? _validateGroup(String? value) {
     final group = value?.trim() ?? '';
     if (group.isEmpty) {
@@ -97,7 +94,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 controller: _nameController,
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(labelText: 'Name'),
-                validator: _validateName,
                 onFieldSubmitted: (_) => _saveProfile(),
               ),
               const SizedBox(height: 12),
