@@ -73,6 +73,16 @@ class _RunDetailsScreenState extends State<RunDetailsScreen> {
 
   bool get _isRegistered => _item.participants.any(_matchesProfileName);
 
+  Future<void> _editRun() async {
+    final result = await widget.arguments.onEditRun(_item);
+    if (!mounted || result == null) {
+      return;
+    }
+    setState(() {
+      _item = result;
+    });
+  }
+
   void _openProfileFromSnackBar() {
     if (!mounted) {
       return;
@@ -309,6 +319,13 @@ class _RunDetailsScreenState extends State<RunDetailsScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Run details'),
+          actions: [
+            IconButton(
+              tooltip: 'Edit run',
+              onPressed: _editRun,
+              icon: const Icon(Icons.edit_outlined),
+            ),
+          ],
           bottom: TabBar(
             tabs: [
               const Tab(text: 'About'),

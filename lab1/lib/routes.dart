@@ -4,6 +4,7 @@ import 'models/profile.dart';
 class Routes {
   static const home = '/';
   static const runDetails = '/run-details';
+  static const runForm = '/run-form';
 }
 
 class RunDetailsArguments {
@@ -12,10 +13,18 @@ class RunDetailsArguments {
     required this.profile,
     required this.onParticipantsChanged,
     required this.onOpenProfile,
+    required this.onEditRun,
   });
 
   final Item item;
   final Profile profile;
   final Item Function(Item updatedItem) onParticipantsChanged;
   final void Function() onOpenProfile;
+  final Future<Item?> Function(Item item) onEditRun;
+}
+
+class RunFormArguments {
+  const RunFormArguments({this.item});
+
+  final Item? item;
 }

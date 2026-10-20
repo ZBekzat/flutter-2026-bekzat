@@ -59,8 +59,41 @@ class _AppShellState extends State<AppShell> {
         profile: _profile,
         onParticipantsChanged: _updateRun,
         onOpenProfile: _openProfile,
+        onEditRun: _editRun,
       ),
     );
+  }
+
+  Future<Item?> _createRun() async {
+    final result = await Navigator.pushNamed<Item>(
+      context,
+      Routes.runForm,
+      arguments: const RunFormArguments(),
+    );
+    if (!mounted || result == null) {
+      return null;
+    }
+    setState(() {
+      _items = [..._items, result];
+    });
+    return result;
+  }
+
+  Future<Item?> _editRun(Item item) async {
+    final result = await Navigator.pushNamed<Item>(
+      context,
+      Routes.runForm,
+      arguments: RunFormArguments(item: item),
+    );
+    if (!mounted || result == null) {
+      return null;
+    }
+    setState(() {
+      _items = _items
+          .map((run) => run.title == item.title ? result : run)
+          .toList();
+    });
+    return result;
   }
 
   void _openProfile() {
@@ -184,6 +217,13 @@ class _AppShellState extends State<AppShell> {
         ),
       ),
       body: _selectedScreen(themeMode),
+      floatingActionButton: _selectedIndex == 0
+          ? FloatingActionButton.extended(
+              onPressed: _createRun,
+              icon: const Icon(Icons.add),
+              label: const Text('New run'),
+            )
+          : null,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {

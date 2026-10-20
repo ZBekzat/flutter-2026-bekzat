@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'app_shell.dart';
+import 'models/item.dart';
 import 'routes.dart';
 import 'screens/not_found_screen.dart';
+import 'screens/run_form_screen.dart';
 import 'screens/run_details_screen.dart';
 import 'theme_mode_scope.dart';
 
@@ -53,6 +55,19 @@ class _MyAppState extends State<MyApp> {
             return MaterialPageRoute<void>(
               settings: settings,
               builder: (context) => RunDetailsScreen(arguments: arguments),
+            );
+          }
+          return MaterialPageRoute<void>(
+            settings: settings,
+            builder: (context) => const NotFoundScreen(),
+          );
+        }
+        if (settings.name == Routes.runForm) {
+          final arguments = settings.arguments;
+          if (arguments is RunFormArguments) {
+            return MaterialPageRoute<Item>(
+              settings: settings,
+              builder: (context) => RunFormScreen(arguments: arguments),
             );
           }
           return MaterialPageRoute<void>(
