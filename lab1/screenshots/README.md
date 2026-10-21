@@ -1,13 +1,11 @@
-# Required screenshots
+# PaceMate screenshots
 
-Save genuine screenshots from the running PaceMate app in this directory:
+This directory contains genuine captures of the running PaceMate app:
 
-| Filename | Capture |
+| File | What it shows |
 | --- | --- |
-| `phone-light.png` | Runs tab in a phone-sized emulator with the Light theme selected. |
-| `phone-dark.png` | Runs tab in the same phone-sized emulator with the Dark theme selected. |
-| `tablet-grid.png` | Runs tab in a tablet-sized emulator wide enough to display the grid. |
+| `phone-light.png` | Runs tab in a phone layout using the Light theme. |
+| `phone-dark.png` | Runs tab in a phone layout using the Dark theme. |
+| `tablet-grid.png` | Runs tab in a wide tablet layout using the responsive grid. |
 
-To capture them manually, run `flutter run` from the `lab1` directory and select a phone or tablet emulator. For the light and dark images, choose the theme from the Profile tab, return to Runs, and use the emulator's screenshot control. For the tablet image, use a tablet emulator whose available Runs area is at least 600 logical pixels wide, then save a screenshot while the grid is visible. Keep the screenshots in this directory using the filenames above.
-
-No screenshot files are included yet. Although Chrome is available as a Flutter target, Flutter reports that screenshots are unsupported for Chrome in this environment, and the current UI session does not expose a capturable app window. These placeholders describe the needed captures; they are not screenshots of the app.
+To replace a capture, run the app on a phone or tablet emulator, select the desired theme from Profile when needed, and capture the Runs tab with the emulator's screenshot control. The tablet's available Runs area should be at least 600 logical pixels wide so the grid is visible. Save each capture here using the filenames above.
