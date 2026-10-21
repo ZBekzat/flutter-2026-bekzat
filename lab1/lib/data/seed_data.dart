@@ -2,7 +2,7 @@ import '../models/item.dart';
 import '../models/profile.dart';
 
 final sampleProfile = Profile(
-  name: 'Amina Sadykova',
+  name: 'Zhumamurat Bekzat',
   group: 'Almaty PaceMates',
 );
 
