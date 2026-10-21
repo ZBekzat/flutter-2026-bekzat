@@ -134,7 +134,7 @@ class _AppShellState extends State<AppShell> {
   void _resetData() {
     setState(() {
       _items = createSeedRuns();
-      _profile = sampleProfile;
+      _profile = Profile.empty();
       _selectedIndex = 0;
     });
   }
